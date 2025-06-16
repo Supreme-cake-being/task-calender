@@ -16,7 +16,7 @@ const taskSchema = new Schema(
     },
     description: {
       type: String,
-      required: [true, "Text is required"],
+      required: [true, "Description is required"],
     },
     status: {
       type: String,
