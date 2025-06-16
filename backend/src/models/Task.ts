@@ -51,14 +51,14 @@ export const taskQuerySchema = Joi.object({
 export const taskCreateSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  status: Joi.string().valid(["in progress", "done"]),
+  status: Joi.string().valid("in progress", "done"),
   dueDate: Joi.date().required(),
 }).messages(errorMessages);
 
 export const taskUpdateSchema = Joi.object({
   title: Joi.string().required(),
-  text: Joi.string().required(),
-  status: Joi.string().valid(["in progress", "done"]),
+  description: Joi.string().required(),
+  status: Joi.string().valid("in progress", "done"),
   dueDate: Joi.date().required(),
 }).messages(errorMessages);
 

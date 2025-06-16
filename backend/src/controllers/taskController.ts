@@ -25,7 +25,7 @@ const getTasks: RequestHandler = async (req, res) => {
 const getTaskById: RequestHandler = async (req, res) => {
   const { taskId } = req.params;
 
-  const task = await Task.find({ _id: taskId });
+  const task = await Task.findById(taskId);
   if (!task) {
     throw HttpError(404, "Not found");
   }
