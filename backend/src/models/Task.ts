@@ -44,6 +44,10 @@ taskSchema.pre("findOneAndUpdate", runValidatorsAtUpdate);
 
 taskSchema.post("findOneAndUpdate", handleSaveError);
 
+export const taskQuerySchema = Joi.object({
+  year: Joi.number().min(1975).required(),
+});
+
 export const taskCreateSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
@@ -51,7 +55,7 @@ export const taskCreateSchema = Joi.object({
   dueDate: Joi.date().required(),
 }).messages(errorMessages);
 
-export const blogUpdateSchema = Joi.object({
+export const taskUpdateSchema = Joi.object({
   title: Joi.string().required(),
   text: Joi.string().required(),
   status: Joi.string().valid(["in progress", "done"]),
