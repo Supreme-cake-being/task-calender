@@ -9,7 +9,7 @@ const getHolidays: RequestHandler = async (req, res) => {
     process.env.DATE_NAGER_API + `/PublicHolidays/${year}/${countryCode}`
   );
   if (!response.ok) {
-    HttpError(400, "Bad request");
+    throw HttpError(400, "Bad request");
   }
 
   const holidays = await response.json();

@@ -7,7 +7,7 @@ const getCountries: RequestHandler = async (_req, res) => {
     process.env.DATE_NAGER_API + `/AvailableCountries`
   );
   if (!response.ok) {
-    HttpError(400, "Bad request");
+    throw HttpError(400, "Bad request");
   }
 
   const countries = await response.json();
