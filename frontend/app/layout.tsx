@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import ClientContainer from "src/components/Container";
 
 export const metadata: Metadata = {
   title: "Task Calender",
   description: "Task Calender",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ClientContainer>{children}</ClientContainer>
+      </body>
     </html>
   );
 }
