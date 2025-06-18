@@ -6,6 +6,7 @@ import { months } from "src/constants/months";
 import { CalenderGrid, Header } from "./Calender.styled";
 import { getMonthDays } from "src/helpers/getMonthDays";
 import { daysOfWeek } from "src/constants/daysOfWeek";
+import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
 
 export const Calender = () => {
   const [month, setMonth] = useState(0);
@@ -48,7 +49,7 @@ export const Calender = () => {
         ))}
 
         {calenderDays.map(({ date, currentMonth }, index) => (
-          <div key={index}>{date}</div>
+          <CalenderDay key={index} date={date} currentMonth={currentMonth} />
         ))}
       </CalenderGrid>
     </>
