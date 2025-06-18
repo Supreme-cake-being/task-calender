@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
+import StyledComponentsRegistry from "src/lib/registry";
 import ClientContainer from "src/components/Container";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Task Calender",
-  description: "Task Calender",
+  title: "Task Calendar",
+  description: "Task Calendar",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body>
-        <ClientContainer>{children}</ClientContainer>
+        <StyledComponentsRegistry>
+          <ClientContainer>{children}</ClientContainer>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
