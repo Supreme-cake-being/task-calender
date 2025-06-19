@@ -16,3 +16,8 @@ export const CalenderGrid = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
 `;
+
+export const DayOfTheWeek = styled.div`
+  display: flex;
+  justify-content: center;
+`;

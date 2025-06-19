@@ -3,12 +3,17 @@
 import { useEffect, useState } from "react";
 import { MonthSwitch } from "src/components/MonthSwitch/MonthSwitch";
 import { months } from "src/constants/months";
-import { CalenderGrid, Header } from "./Calender.styled";
+import { CalenderGrid, DayOfTheWeek, Header } from "./Calender.styled";
 import { getMonthDays } from "src/helpers/getMonthDays";
 import { daysOfWeek } from "src/constants/daysOfWeek";
 import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
+import { DndContext } from "@dnd-kit/core";
 
-export const Calender = () => {
+interface ICalender {
+  holidays: Record<string, string>[];
+}
+
+export const Calender = ({ holidays }: ICalender) => {
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
 
@@ -33,8 +38,18 @@ export const Calender = () => {
 
   const calenderDays = getMonthDays(month, year);
 
+  console.log(
+    holidays.filter(({ date }) => new Date(date).getMonth() === month)
+  );
+
+  const thisMonthHolidays = holidays.filter(
+    ({ date }) => new Date(date).getMonth() === month
+  );
+
+  console.log(calenderDays);
+
   return (
-    <>
+    <DndContext>
       <Header>
         <MonthSwitch setMonth={setMonth} />
 
@@ -45,13 +60,23 @@ export const Calender = () => {
 
       <CalenderGrid>
         {daysOfWeek.map((day) => (
-          <div key={day}>{day}</div>
+          <DayOfTheWeek key={day}>
+            <p>{day}</p>
+          </DayOfTheWeek>
         ))}
 
         {calenderDays.map(({ date, currentMonth }, index) => (
-          <CalenderDay key={index} date={date} currentMonth={currentMonth} />
+          <CalenderDay
+            key={index}
+            date={date}
+            currentMonth={currentMonth}
+            holidays={thisMonthHolidays.filter(
+              (holiday) =>
+                currentMonth && new Date(holiday.date).getDate() === date
+            )}
+          />
         ))}
       </CalenderGrid>
-    </>
+    </DndContext>
   );
 };
