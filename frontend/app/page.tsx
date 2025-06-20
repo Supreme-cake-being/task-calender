@@ -8,6 +8,9 @@ export default async function Home() {
   const holidays = await axios.get(process.env.NEXT_PUBLIC_API + "/holidays", {
     params: { year: date.getFullYear(), countryCode: "UA" },
   });
+  const tasks = await axios.get(process.env.NEXT_PUBLIC_API + "/tasks", {
+    params: { year: date.getFullYear() },
+  });
 
-  return <Calender holidays={holidays.data} />;
+  return <Calender holidays={holidays.data} tasks={tasks.data} />;
 }

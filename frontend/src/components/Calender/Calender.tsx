@@ -11,9 +11,10 @@ import { DndContext } from "@dnd-kit/core";
 
 interface ICalender {
   holidays: Record<string, string>[];
+  tasks: Record<string, any>[];
 }
 
-export const Calender = ({ holidays }: ICalender) => {
+export const Calender = ({ holidays, tasks }: ICalender) => {
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
 
@@ -38,14 +39,14 @@ export const Calender = ({ holidays }: ICalender) => {
 
   const calenderDays = getMonthDays(month, year);
 
-  console.log(
-    holidays.filter(({ date }) => new Date(date).getMonth() === month)
-  );
-
   const thisMonthHolidays = holidays.filter(
     ({ date }) => new Date(date).getMonth() === month
   );
+  const thisMonthTasks = tasks.filter(
+    ({ dueDate }) => new Date(dueDate).getMonth() === month
+  );
 
+  console.log(holidays, tasks);
   console.log(calenderDays);
 
   return (
@@ -65,14 +66,18 @@ export const Calender = ({ holidays }: ICalender) => {
           </DayOfTheWeek>
         ))}
 
-        {calenderDays.map(({ date, currentMonth }, index) => (
+        {calenderDays.map(({ day, date, currentMonth }, index) => (
           <CalenderDay
             key={index}
+            day={day}
             date={date}
             currentMonth={currentMonth}
             holidays={thisMonthHolidays.filter(
               (holiday) =>
-                currentMonth && new Date(holiday.date).getDate() === date
+                currentMonth && new Date(holiday.date).getDate() === day
+            )}
+            tasks={thisMonthTasks.filter(
+              ({ dueDate }) => dueDate.split("T")[0] === date
             )}
           />
         ))}
