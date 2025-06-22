@@ -26,10 +26,6 @@ const taskSchema = new Schema(
     dueDate: {
       type: Date,
       required: [true, "Due date is required"],
-      validate: {
-        validator: (value: any) => value > new Date(),
-        message: "Due date must be in the future",
-      },
     },
   },
   {
