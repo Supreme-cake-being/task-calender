@@ -1,14 +1,21 @@
 "use client";
 
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
-import { MonthSwitch } from "src/components/MonthSwitch/MonthSwitch";
-import { months } from "src/constants/months";
+
 import { CalenderGrid, DayOfTheWeek, Header } from "./Calender.styled";
-import { getMonthDays } from "src/helpers/getMonthDays";
-import { daysOfWeek } from "src/constants/daysOfWeek";
+
+import { MonthSwitch } from "src/components/MonthSwitch/MonthSwitch";
 import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
-import { DndContext } from "@dnd-kit/core";
 import { Task } from "src/components/Task/Task";
+import { DebugTask } from "src/components/Task/DebugTask";
+
+import { getMonthDays } from "src/helpers/getMonthDays";
+
+import { months } from "src/constants/months";
+import { daysOfWeek } from "src/constants/daysOfWeek";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface ICalender {
   holidays: Record<string, string>[];
@@ -16,8 +23,13 @@ interface ICalender {
 }
 
 export const Calender = ({ holidays, tasks }: ICalender) => {
+  const router = useRouter();
+
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
+  const [activeTask, setActiveTask] = useState<Record<string, any> | null>(
+    null
+  );
 
   useEffect(() => {
     const date = new Date();
@@ -47,11 +59,41 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
     ({ dueDate }) => new Date(dueDate).getMonth() === month
   );
 
-  console.log(holidays, tasks);
-  // console.log(calenderDays);
+  const handleDragStart = async (event: any) => {
+    const task = event.active.data.current?.task;
+    setActiveTask(task);
+  };
+
+  const handleDragEnd = async (event: any) => {
+    console.log("Drag ended", event);
+
+    const { active, over } = event;
+
+    const task = active.data.current?.task;
+
+    console.log("Dragged task:", task);
+
+    if (!task || !over) return;
+
+    const originalDate = task.dueDate.split("T")[0];
+    const newDate = over.id;
+
+    if (originalDate !== newDate) {
+      await axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${active.id}`, {
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        dueDate: newDate,
+      });
+    }
+
+    setActiveTask(null);
+
+    router.refresh();
+  };
 
   return (
-    <DndContext>
+    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Header>
         <MonthSwitch setMonth={setMonth} />
 
@@ -59,15 +101,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
           {months[month]} {year}
         </h1>
 
-        <div style={{ display: "none" }}>
-          <Task
-            key="test"
-            title="Test Task"
-            description=""
-            status="done"
-            dueDate="2025-06-01"
-          />
-        </div>
+        <DebugTask />
       </Header>
 
       <CalenderGrid>
@@ -93,6 +127,10 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
           />
         ))}
       </CalenderGrid>
+
+      <DragOverlay>
+        {activeTask ? <Task task={activeTask} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 };

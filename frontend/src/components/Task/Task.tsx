@@ -1,19 +1,26 @@
 "use client";
 
+import { useDraggable } from "@dnd-kit/core";
 import { Bar, Box, TaskName } from "./Task.styled";
 
 interface ITask {
-  title: string;
-  description: string;
-  status: "in progress" | "done";
-  dueDate: string;
+  task: Record<string, any>;
 }
 
-export const Task = ({ title, description, status, dueDate }: ITask) => {
+export const Task = ({ task }: ITask) => {
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: task._id,
+    data: {
+      task,
+    },
+  });
+
   return (
-    <Box>
-      <Bar />
-      <TaskName>{title}</TaskName>
-    </Box>
+    <div ref={setNodeRef} {...listeners} {...attributes}>
+      <Box>
+        <Bar />
+        <TaskName>{task.title}</TaskName>
+      </Box>
+    </div>
   );
 };

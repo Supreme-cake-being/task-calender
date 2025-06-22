@@ -1,5 +1,6 @@
 "use client";
 
+import { useDroppable } from "@dnd-kit/core";
 import { Box, Day } from "./CalenderDay.styled";
 import { Holiday } from "src/components/Holiday/Holiday";
 import { Task } from "src/components/Task/Task";
@@ -19,26 +20,18 @@ export const CalenderDay = ({
   holidays,
   tasks,
 }: ICalenderDay) => {
-  if (tasks && tasks.length >= 1) {
-    console.log(day, tasks);
-  }
+  const { setNodeRef } = useDroppable({ id: date });
 
   return (
-    <Box $currentMonth={currentMonth}>
+    <Box $currentMonth={currentMonth} ref={setNodeRef}>
       <Day>{day}</Day>
 
       {holidays?.map(({ date, localName }) => (
         <Holiday key={date} localName={localName} />
       ))}
 
-      {tasks?.map(({ _id, title, description, status, dueDate }) => (
-        <Task
-          key={_id}
-          title={title}
-          description={description}
-          status={status}
-          dueDate={dueDate}
-        />
+      {tasks?.map((task) => (
+        <Task key={task._id} task={task} />
       ))}
     </Box>
   );

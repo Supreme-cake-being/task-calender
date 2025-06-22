@@ -1,12 +1,18 @@
 import styled from "styled-components";
 
 export const Box = styled.div`
+  cursor: grab;
+
   padding: 8px;
 
   background-color: #ffffff;
   border-radius: 4px;
 
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 export const Bar = styled.div`
