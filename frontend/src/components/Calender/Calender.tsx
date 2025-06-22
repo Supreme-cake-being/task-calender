@@ -8,6 +8,7 @@ import { getMonthDays } from "src/helpers/getMonthDays";
 import { daysOfWeek } from "src/constants/daysOfWeek";
 import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
 import { DndContext } from "@dnd-kit/core";
+import { Task } from "src/components/Task/Task";
 
 interface ICalender {
   holidays: Record<string, string>[];
@@ -47,7 +48,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
   );
 
   console.log(holidays, tasks);
-  console.log(calenderDays);
+  // console.log(calenderDays);
 
   return (
     <DndContext>
@@ -57,6 +58,16 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
         <h1>
           {months[month]} {year}
         </h1>
+
+        <div style={{ display: "none" }}>
+          <Task
+            key="test"
+            title="Test Task"
+            description=""
+            status="done"
+            dueDate="2025-06-01"
+          />
+        </div>
       </Header>
 
       <CalenderGrid>

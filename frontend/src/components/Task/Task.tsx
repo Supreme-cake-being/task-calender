@@ -1,3 +1,5 @@
+"use client";
+
 import { Bar, Box, TaskName } from "./Task.styled";
 
 interface ITask {
