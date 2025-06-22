@@ -1,4 +1,4 @@
-import { Box, Bar, TaskName } from "./Task.styled";
+import { Bar, Box, TaskName } from "./Task.styled";
 
 interface ITask {
   title: string;

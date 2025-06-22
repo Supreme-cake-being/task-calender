@@ -1,6 +1,8 @@
+"use client";
+
+import { Box, Day } from "./CalenderDay.styled";
 import { Holiday } from "src/components/Holiday/Holiday";
 import { Task } from "src/components/Task/Task";
-import { Box, Day } from "./CalenderDay.styled";
 
 interface ICalenderDay {
   day: number;
@@ -17,6 +19,10 @@ export const CalenderDay = ({
   holidays,
   tasks,
 }: ICalenderDay) => {
+  if (tasks && tasks.length >= 1) {
+    console.log(day, tasks);
+  }
+
   return (
     <Box $currentMonth={currentMonth}>
       <Day>{day}</Day>

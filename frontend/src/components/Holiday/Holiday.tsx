@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Bar, HolidayName } from "./Holiday.styled";
 
 interface IHoliday {
