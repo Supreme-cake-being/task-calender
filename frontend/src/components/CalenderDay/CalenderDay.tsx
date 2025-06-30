@@ -7,14 +7,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import {
-  Box,
-  CreateButton,
-  Day,
-  Events,
-  Holidays,
-  Tasks,
-} from "./CalenderDay.styled";
+import { Box, CreateButton, Day, Events } from "./CalenderDay.styled";
 import { Holiday } from "src/components/Holiday/Holiday";
 import { Task } from "src/components/Task/Task";
 import { ITaskType, ITasksByDate } from "src/components/Calender/Calender";
@@ -37,8 +30,6 @@ export const CalenderDay = ({
   tasks,
   setTasksByDate,
 }: ICalenderDay) => {
-  // console.log(tasks);
-
   const [isShown, setIsShown] = useState(false);
 
   const { setNodeRef } = useDroppable({ id: date });

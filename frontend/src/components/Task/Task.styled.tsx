@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Box = styled.li`
+  list-style-type: none;
   cursor: grab;
 
   padding: 8px;

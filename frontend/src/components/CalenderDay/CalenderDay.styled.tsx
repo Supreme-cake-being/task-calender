@@ -24,6 +24,12 @@ export const Events = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const CreateButton = styled.button`
