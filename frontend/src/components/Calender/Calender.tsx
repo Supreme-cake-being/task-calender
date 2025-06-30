@@ -55,9 +55,9 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
     setTasksByDate(grouped);
   }, []); // Only run once to initialize
 
-  useEffect(() => {
-    console.log(tasksByDate);
-  }, [tasksByDate]);
+  // useEffect(() => {
+  //   console.log(tasksByDate);
+  // }, [tasksByDate]);
 
   const calenderDays = getMonthDays(month, year);
   const thisMonthHolidays = holidays.filter(
@@ -74,14 +74,12 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
     if (!over) return;
 
     const activeTaskId = String(active.id);
-    const sourceDate = active.data.current?.task?.dueDate.split("T")[0];
+    const sourceDate = String(active.data.current?.task?.dueDate.split("T")[0]);
     const targetDate = String(over.id);
 
     if (!sourceDate || !targetDate) return;
 
-    if (isNaN(Date.parse(targetDate)) !== false) return;
-
-    if (sourceDate === targetDate) {
+    if (isNaN(Date.parse(targetDate))) {
       setTasksByDate((prev) => {
         const updatedDayTasks = [...(prev[sourceDate] || [])];
         const oldIndex = updatedDayTasks.findIndex(
@@ -106,7 +104,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
           (task) => task._id === activeTaskId
         );
 
-        if (movedTaskIndex === -1) return { ...prev }; // Ensure new object always
+        if (movedTaskIndex === -1) return { ...prev };
 
         const movedTask = {
           ...sourceTasks[movedTaskIndex],
@@ -128,17 +126,15 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
           delete updated[sourceDate];
         }
 
-        return { ...updated }; // Ensure new object
-      });
+        const { title, description, status } = active.data.current?.task;
+        axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${activeTaskId}`, {
+          title,
+          description,
+          status,
+          dueDate: targetDate,
+        });
 
-      console.log(over, targetDate);
-
-      const { title, description, status } = active.data.current?.task;
-      axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${activeTaskId}`, {
-        title,
-        description,
-        status,
-        dueDate: targetDate,
+        return { ...updated };
       });
     }
 
