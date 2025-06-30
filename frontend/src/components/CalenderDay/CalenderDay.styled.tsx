@@ -1,7 +1,9 @@
 import styled from "styled-components";
 
 export const Box = styled.div<{ $currentMonth: boolean }>`
-  min-height: 120px;
+  position: relative;
+
+  height: 150px;
 
   padding: 8px;
 
@@ -16,4 +18,30 @@ export const Box = styled.div<{ $currentMonth: boolean }>`
 export const Day = styled.p`
   font-size: 12px;
   line-height: 16px;
+`;
+
+export const Holidays = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+export const CreateButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+`;
+
+export const Tasks = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;

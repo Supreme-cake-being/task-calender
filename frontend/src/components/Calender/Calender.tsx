@@ -1,107 +1,158 @@
 "use client";
 
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import axios from "axios";
+import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 
 import { CalenderGrid, DayOfTheWeek, Header } from "./Calender.styled";
-
 import { MonthSwitch } from "src/components/MonthSwitch/MonthSwitch";
 import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
 import { Task } from "src/components/Task/Task";
-import { DebugTask } from "src/components/Task/DebugTask";
-
+import { Debug } from "src/components/Debug";
 import { getMonthDays } from "src/helpers/getMonthDays";
 
 import { months } from "src/constants/months";
 import { daysOfWeek } from "src/constants/daysOfWeek";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+
+export interface ITaskType {
+  _id: string;
+  title: string;
+  description: string;
+  status: "in progress" | "done";
+  dueDate: string;
+}
+
+export interface ITasksByDate {
+  [date: string]: ITaskType[];
+}
 
 interface ICalender {
   holidays: Record<string, string>[];
-  tasks: Record<string, any>[];
+  tasks: ITaskType[];
 }
 
 export const Calender = ({ holidays, tasks }: ICalender) => {
-  const router = useRouter();
-
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
-  const [activeTask, setActiveTask] = useState<Record<string, any> | null>(
-    null
-  );
+  const [tasksByDate, setTasksByDate] = useState<ITasksByDate>({});
+  const [activeTask, setActiveTask] = useState<ITaskType | null>(null);
 
+  // Initialize month/year on mount
   useEffect(() => {
-    const date = new Date();
-
-    setMonth(date.getMonth());
-    setYear(date.getFullYear());
+    const now = new Date();
+    setMonth(now.getMonth());
+    setYear(now.getFullYear());
   }, []);
 
+  // Group tasks once on mount
   useEffect(() => {
-    if (month === 12) {
-      setYear((prevState) => prevState + 1);
-      setMonth(0);
-    }
+    const grouped: ITasksByDate = {};
+    tasks.forEach((task) => {
+      const dateKey = task.dueDate.split("T")[0];
+      if (!grouped[dateKey]) grouped[dateKey] = [];
+      grouped[dateKey].push(task);
+    });
+    setTasksByDate(grouped);
+  }, []); // Only run once to initialize
 
-    if (month === -1) {
-      setYear((prevState) => prevState - 1);
-      setMonth(11);
-    }
-  }, [month]);
+  useEffect(() => {
+    console.log(tasksByDate);
+  }, [tasksByDate]);
 
   const calenderDays = getMonthDays(month, year);
-
   const thisMonthHolidays = holidays.filter(
     ({ date }) => new Date(date).getMonth() === month
   );
-  const thisMonthTasks = tasks.filter(
-    ({ dueDate }) => new Date(dueDate).getMonth() === month
-  );
 
-  const handleDragStart = async (event: any) => {
+  const handleDragStart = (event: any) => {
     const task = event.active.data.current?.task;
-    setActiveTask(task);
+    if (task) setActiveTask(task);
   };
 
-  const handleDragEnd = async (event: any) => {
-    console.log("Drag ended", event);
-
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    if (!over) return;
 
-    const task = active.data.current?.task;
+    const activeTaskId = String(active.id);
+    const sourceDate = active.data.current?.task?.dueDate.split("T")[0];
+    const targetDate = String(over.id);
 
-    console.log("Dragged task:", task);
+    if (!sourceDate || !targetDate) return;
 
-    if (!task || !over) return;
+    if (isNaN(Date.parse(targetDate)) !== false) return;
 
-    const originalDate = task.dueDate.split("T")[0];
-    const newDate = over.id;
+    if (sourceDate === targetDate) {
+      setTasksByDate((prev) => {
+        const updatedDayTasks = [...(prev[sourceDate] || [])];
+        const oldIndex = updatedDayTasks.findIndex(
+          (task) => task._id === activeTaskId
+        );
+        const newIndex = over.data?.current?.sortable?.index;
 
-    if (originalDate !== newDate) {
-      await axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${active.id}`, {
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        dueDate: newDate,
+        if (oldIndex === -1 || newIndex === undefined || oldIndex === newIndex)
+          return prev;
+
+        const [movedTask] = updatedDayTasks.splice(oldIndex, 1);
+        updatedDayTasks.splice(newIndex, 0, movedTask);
+
+        return { ...prev, [sourceDate]: updatedDayTasks };
+      });
+    } else {
+      setTasksByDate((prev) => {
+        const sourceTasks = [...(prev[sourceDate] || [])];
+        const targetTasks = [...(prev[targetDate] || [])];
+
+        const movedTaskIndex = sourceTasks.findIndex(
+          (task) => task._id === activeTaskId
+        );
+
+        if (movedTaskIndex === -1) return { ...prev }; // Ensure new object always
+
+        const movedTask = {
+          ...sourceTasks[movedTaskIndex],
+          dueDate: targetDate,
+        };
+
+        const newSourceTasks = sourceTasks.filter(
+          (task) => task._id !== activeTaskId
+        );
+        const newTargetTasks = [...targetTasks, movedTask];
+
+        const updated = {
+          ...prev,
+          [sourceDate]: newSourceTasks,
+          [targetDate]: newTargetTasks,
+        };
+
+        if (updated[sourceDate]?.length === 0) {
+          delete updated[sourceDate];
+        }
+
+        return { ...updated }; // Ensure new object
+      });
+
+      console.log(over, targetDate);
+
+      const { title, description, status } = active.data.current?.task;
+      axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${activeTaskId}`, {
+        title,
+        description,
+        status,
+        dueDate: targetDate,
       });
     }
 
     setActiveTask(null);
-
-    router.refresh();
   };
 
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Header>
         <MonthSwitch setMonth={setMonth} />
-
         <h1>
           {months[month]} {year}
         </h1>
-
-        <DebugTask />
+        <Debug />
       </Header>
 
       <CalenderGrid>
@@ -121,9 +172,8 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
               (holiday) =>
                 currentMonth && new Date(holiday.date).getDate() === day
             )}
-            tasks={thisMonthTasks.filter(
-              ({ dueDate }) => dueDate.split("T")[0] === date
-            )}
+            tasks={tasksByDate[date] || []}
+            setTasksByDate={setTasksByDate}
           />
         ))}
       </CalenderGrid>

@@ -15,17 +15,51 @@ export const Box = styled.div`
   }
 `;
 
-export const Bar = styled.div`
+export const DragHandle = styled.div`
+  cursor: grab;
+  width: 100%;
+  height: 8px;
   margin-bottom: 4px;
+`;
 
+export const Bar = styled.div`
   width: 33%;
   height: 8px;
 
-  background-color: #0036ff;
+  background-color: green;
   border-radius: 4px;
 `;
 
 export const TaskName = styled.p`
   font-size: 14px;
   line-height: 20px;
+
+  cursor: pointer;
+`;
+
+export const InputBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const TaskInput = styled.input`
+  width: 100%;
+
+  font-size: 14px;
+  line-height: 20px;
+
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 8px;
+`;
+
+export const ConfirmButton = styled.button`
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
 `;
