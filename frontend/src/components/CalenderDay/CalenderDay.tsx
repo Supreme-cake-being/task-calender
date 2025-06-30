@@ -7,7 +7,14 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { Box, CreateButton, Day, Holidays, Tasks } from "./CalenderDay.styled";
+import {
+  Box,
+  CreateButton,
+  Day,
+  Events,
+  Holidays,
+  Tasks,
+} from "./CalenderDay.styled";
 import { Holiday } from "src/components/Holiday/Holiday";
 import { Task } from "src/components/Task/Task";
 import { ITaskType, ITasksByDate } from "src/components/Calender/Calender";
@@ -71,24 +78,26 @@ export const CalenderDay = ({
     >
       <Day>{day}</Day>
 
-      <Holidays>
-        {holidays?.map(({ date, localName }) => (
-          <Holiday key={date} localName={localName} />
-        ))}
-      </Holidays>
+      <Events>
+        <Holidays>
+          {holidays?.map(({ date, localName }) => (
+            <Holiday key={date} localName={localName} />
+          ))}
+        </Holidays>
 
-      {tasks && (
-        <SortableContext
-          items={tasks.map((t) => t._id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <Tasks>
-            {tasks.map((task) => (
-              <Task key={task._id} task={task} />
-            ))}
-          </Tasks>
-        </SortableContext>
-      )}
+        {tasks && (
+          <SortableContext
+            items={tasks.map((t) => t._id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <Tasks>
+              {tasks.map((task) => (
+                <Task key={task._id} task={task} />
+              ))}
+            </Tasks>
+          </SortableContext>
+        )}
+      </Events>
 
       {isShown && (
         <CreateButton type="button" onClick={() => createNewTask(date)}>

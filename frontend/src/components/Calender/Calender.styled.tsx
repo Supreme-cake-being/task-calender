@@ -11,7 +11,7 @@ export const Header = styled.header`
   line-height: 24px;
 `;
 
-export const CalenderGrid = styled.div`
+export const CalenderGrid = styled.ul`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
