@@ -79,22 +79,18 @@ export const CalenderDay = ({
       <Day>{day}</Day>
 
       <Events>
-        <Holidays>
-          {holidays?.map(({ date, localName }) => (
-            <Holiday key={date} localName={localName} />
-          ))}
-        </Holidays>
+        {holidays?.map(({ date, localName }) => (
+          <Holiday key={date} localName={localName} />
+        ))}
 
         {tasks && (
           <SortableContext
             items={tasks.map((t) => t._id)}
             strategy={verticalListSortingStrategy}
           >
-            <Tasks>
-              {tasks.map((task) => (
-                <Task key={task._id} task={task} />
-              ))}
-            </Tasks>
+            {tasks.map((task) => (
+              <Task key={task._id} task={task} />
+            ))}
           </SortableContext>
         )}
       </Events>
