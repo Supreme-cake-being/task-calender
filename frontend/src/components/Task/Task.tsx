@@ -23,6 +23,7 @@ interface ITask {
 export const Task = ({ task }: ITask) => {
   const [isEdited, setIsEdited] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
+  const [prevTitle, setPrevTitle] = useState(task.title);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -37,10 +38,14 @@ export const Task = ({ task }: ITask) => {
     transition,
   };
 
-  const toggleIsEdited = () => setIsEdited(!isEdited);
+  const toggleIsEdited = () => {
+    if (!isEdited) {
+      setPrevTitle(taskTitle); // Save current title before editing
+    }
+    setIsEdited(!isEdited);
+  };
 
   const handleSubmit = async () => {
-    console.log("edited");
     await axios.put(process.env.NEXT_PUBLIC_API + `/tasks/${task._id}`, {
       title: taskTitle,
       description: task.description,
@@ -48,6 +53,11 @@ export const Task = ({ task }: ITask) => {
       status: task.status,
     });
     toggleIsEdited();
+  };
+
+  const handleCancel = () => {
+    setTaskTitle(prevTitle); // Reset to saved value
+    setIsEdited(false);
   };
 
   return (
@@ -79,7 +89,7 @@ export const Task = ({ task }: ITask) => {
                 </svg>
               </ConfirmButton>
 
-              <CancelButton onClick={toggleIsEdited}>
+              <CancelButton onClick={handleCancel}>
                 <svg
                   width="20px"
                   height="20px"
