@@ -41,11 +41,12 @@ export const TaskName = styled.p`
 export const InputBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 `;
 
 export const TaskInput = styled.input`
   width: 100%;
+  padding: 6px;
 
   font-size: 14px;
   line-height: 20px;
@@ -53,6 +54,10 @@ export const TaskInput = styled.input`
   background-color: transparent;
   border: 1px solid black;
   border-radius: 8px;
+`;
+
+export const ButtonBox = styled.div`
+  display: flex;
 `;
 
 export const ConfirmButton = styled.button`
@@ -63,4 +68,30 @@ export const ConfirmButton = styled.button`
   justify-content: center;
 
   background-color: transparent;
+
+  svg path {
+    stroke: #4caf50; /* Green tone */
+  }
+
+  &:hover svg path {
+    stroke: #388e3c; /* Darker green on hover */
+  }
+`;
+
+export const CancelButton = styled.button`
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: transparent;
+
+  svg path {
+    stroke: #f44336; /* Red tone */
+  }
+
+  &:hover svg path {
+    stroke: #d32f2f; /* Darker red on hover */
+  }
 `;

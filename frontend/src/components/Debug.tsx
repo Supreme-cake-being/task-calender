@@ -1,6 +1,12 @@
 import { CreateButton } from "./CalenderDay/CalenderDay.styled";
 import { Task } from "./Task/Task";
-import { ConfirmButton, InputBox, TaskInput } from "./Task/Task.styled";
+import {
+  ButtonBox,
+  CancelButton,
+  ConfirmButton,
+  InputBox,
+  TaskInput,
+} from "./Task/Task.styled";
 
 export const Debug = () => {
   return (
@@ -19,7 +25,9 @@ export const Debug = () => {
 
       <InputBox />
       <TaskInput />
+      <ButtonBox />
       <ConfirmButton />
+      <CancelButton />
     </div>
   );
 };
