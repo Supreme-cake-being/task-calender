@@ -11,6 +11,17 @@ export const Header = styled.header`
   line-height: 24px;
 `;
 
+export const FilterInput = styled.input`
+  padding: 6px;
+
+  font-size: 14px;
+  line-height: 20px;
+
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 8px;
+`;
+
 export const CalenderGrid = styled.ul`
   display: grid;
   grid-template-columns: repeat(7, 1fr);

@@ -70,11 +70,11 @@ export const ConfirmButton = styled.button`
   background-color: transparent;
 
   svg path {
-    stroke: #4caf50; /* Green tone */
+    stroke: #4caf50;
   }
 
   &:hover svg path {
-    stroke: #388e3c; /* Darker green on hover */
+    stroke: #388e3c;
   }
 `;
 
@@ -88,10 +88,10 @@ export const CancelButton = styled.button`
   background-color: transparent;
 
   svg path {
-    stroke: #f44336; /* Red tone */
+    stroke: #f44336;
   }
 
   &:hover svg path {
-    stroke: #d32f2f; /* Darker red on hover */
+    stroke: #d32f2f;
   }
 `;

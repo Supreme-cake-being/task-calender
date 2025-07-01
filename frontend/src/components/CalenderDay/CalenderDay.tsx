@@ -20,6 +20,7 @@ interface ICalenderDay {
   holidays?: Record<string, any>[];
   tasks?: Record<string, any>[];
   setTasksByDate: Dispatch<SetStateAction<ITasksByDate>>;
+  filter: string;
 }
 
 export const CalenderDay = ({
@@ -29,6 +30,7 @@ export const CalenderDay = ({
   holidays,
   tasks,
   setTasksByDate,
+  filter,
 }: ICalenderDay) => {
   const [isShown, setIsShown] = useState(false);
 
@@ -79,9 +81,13 @@ export const CalenderDay = ({
             items={tasks.map((t) => t._id)}
             strategy={verticalListSortingStrategy}
           >
-            {tasks.map((task) => (
-              <Task key={task._id} task={task} />
-            ))}
+            {tasks
+              .filter((task) =>
+                task.title.toLowerCase().includes(filter.toLowerCase())
+              )
+              .map((task) => (
+                <Task key={task._id} task={task} />
+              ))}
           </SortableContext>
         )}
       </Events>

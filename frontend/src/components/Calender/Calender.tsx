@@ -4,7 +4,12 @@ import axios from "axios";
 import { DndContext, DragEndEvent, DragOverlay } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 
-import { CalenderGrid, DayOfTheWeek, Header } from "./Calender.styled";
+import {
+  CalenderGrid,
+  DayOfTheWeek,
+  FilterInput,
+  Header,
+} from "./Calender.styled";
 import { MonthSwitch } from "src/components/MonthSwitch/MonthSwitch";
 import { CalenderDay } from "src/components/CalenderDay/CalenderDay";
 import { Task } from "src/components/Task/Task";
@@ -36,6 +41,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
   const [year, setYear] = useState(0);
   const [tasksByDate, setTasksByDate] = useState<ITasksByDate>({});
   const [activeTask, setActiveTask] = useState<ITaskType | null>(null);
+  const [filter, setFilter] = useState("");
 
   // Initialize month/year on mount
   useEffect(() => {
@@ -141,9 +147,16 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Header>
         <MonthSwitch setMonth={setMonth} />
+
+        <FilterInput
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+
         <h1>
           {months[month]} {year}
         </h1>
+
         <Debug />
       </Header>
 
@@ -166,6 +179,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
             )}
             tasks={tasksByDate[date] || []}
             setTasksByDate={setTasksByDate}
+            filter={filter}
           />
         ))}
       </CalenderGrid>
