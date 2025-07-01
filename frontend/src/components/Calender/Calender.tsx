@@ -43,14 +43,12 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
   const [activeTask, setActiveTask] = useState<ITaskType | null>(null);
   const [filter, setFilter] = useState("");
 
-  // Initialize month/year on mount
   useEffect(() => {
     const now = new Date();
     setMonth(now.getMonth());
     setYear(now.getFullYear());
   }, []);
 
-  // Runs once to initialize
   useEffect(() => {
     const grouped: ITasksByDate = {};
     tasks.forEach((task) => {
