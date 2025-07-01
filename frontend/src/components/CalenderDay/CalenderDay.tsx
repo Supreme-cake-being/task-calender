@@ -10,7 +10,7 @@ import {
 import { Box, CreateButton, Day, Events } from "./CalenderDay.styled";
 import { Holiday } from "src/components/Holiday/Holiday";
 import { Task } from "src/components/Task/Task";
-import { ITaskType, ITasksByDate } from "src/components/Calender/Calender";
+import { ITasksByDate } from "src/components/Calender/Calender";
 import axios from "axios";
 
 interface ICalenderDay {
