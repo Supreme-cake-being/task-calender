@@ -44,7 +44,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
     setYear(now.getFullYear());
   }, []);
 
-  // Group tasks once on mount
+  // Runs once to initialize
   useEffect(() => {
     const grouped: ITasksByDate = {};
     tasks.forEach((task) => {
@@ -53,11 +53,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
       grouped[dateKey].push(task);
     });
     setTasksByDate(grouped);
-  }, []); // Only run once to initialize
-
-  // useEffect(() => {
-  //   console.log(tasksByDate);
-  // }, [tasksByDate]);
+  }, []);
 
   const calenderDays = getMonthDays(month, year);
   const thisMonthHolidays = holidays.filter(
