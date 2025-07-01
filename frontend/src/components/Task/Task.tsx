@@ -15,6 +15,7 @@ import {
 } from "./Task.styled";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface ITask {
   task: Record<string, any>;
@@ -24,6 +25,8 @@ export const Task = ({ task }: ITask) => {
   const [isEdited, setIsEdited] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
   const [prevTitle, setPrevTitle] = useState(task.title);
+
+  const router = useRouter();
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -52,6 +55,7 @@ export const Task = ({ task }: ITask) => {
       dueDate: task.dueDate,
       status: task.status,
     });
+    router.refresh();
     toggleIsEdited();
   };
 

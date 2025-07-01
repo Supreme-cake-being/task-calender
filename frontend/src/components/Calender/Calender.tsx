@@ -59,7 +59,7 @@ export const Calender = ({ holidays, tasks }: ICalender) => {
       grouped[dateKey].push(task);
     });
     setTasksByDate(grouped);
-  }, []);
+  }, [tasks]);
 
   const calenderDays = getMonthDays(month, year);
   const thisMonthHolidays = holidays.filter(
